@@ -2,18 +2,48 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>{{ project_name }} | Welcome</title>
+  <title>Sikhism Info</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Your Custom CSS -->
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
-  <header><h1>{{ project_name }}</h1></header>
-  <main>
-    <p id="greeting">Loading …</p>
-  </main>
-  <script>
-    fetch("/api/hello")
-      .then(r => r.json())
-      .then(d => document.getElementById("greeting").textContent = d.msg);
-  </script>
+<body class="bg-light">
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Sikhism Chatbot</a>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h3 class="card-title text-center mb-4">Ask a Question About Sikhism</h3>
+            <form id="ask-form">
+              <div class="mb-3">
+                <textarea id="prompt" class="form-control" rows="4" placeholder="Ask your question here..."></textarea>
+              </div>
+              <div class="d-grid">
+                <button type="submit" class="btn btn-primary">Ask</button>
+              </div>
+            </form>
+            <hr>
+            <pre id="response" class="bg-light p-3 mt-3 border rounded" style="white-space: pre-wrap;"></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS (optional, needed for dropdowns etc.) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Your JS -->
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
+

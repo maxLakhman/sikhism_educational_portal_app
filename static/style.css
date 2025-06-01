@@ -1,0 +1,111 @@
+/* style.css */
+
+/* Typography */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #e6f0f7;
+  color: #222f3e;
+}
+
+h3.card-title {
+  color: #2e86de;
+  font-weight: 600;
+}
+
+/* Chat Interface Enhancements */
+#prompt {
+  resize: none;
+  border-radius: 0.5rem;
+  border: 1px solid #74b9ff;
+  padding: 1rem;
+  font-size: 1rem;
+  background-color: #dff9fb;
+}
+
+#prompt:focus {
+  outline: none;
+  border-color: #0984e3;
+  box-shadow: 0 0 0 0.25rem rgba(9, 132, 227, 0.25);
+}
+
+button[type="submit"] {
+  font-size: 1.1rem;
+  padding: 0.6rem 1rem;
+  border-radius: 0.5rem;
+  background-color: #0984e3;
+  border: none;
+  color: white;
+  transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+  background-color: #0652dd;
+}
+
+pre#response {
+  background-color: #dfe6e9;
+  border-left: 4px solid #0984e3;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  font-family: 'Courier New', Courier, monospace;
+  color: #2d3436;
+  min-height: 100px;
+}
+
+/* Card Shadow and Padding */
+.card {
+  border: none;
+  border-radius: 1rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  background-color: #f0f4f8;
+}
+
+/* Responsive Navbar */
+.navbar {
+  background-color: #0984e3 !important;
+}
+
+.navbar-brand {
+  font-weight: bold;
+  font-size: 1.4rem;
+  color: #fff;
+}
+
+.navbar-brand:hover {
+  color: #74b9ff;
+}
+
+/* Footer (optional) */
+footer {
+  text-align: center;
+  padding: 2rem;
+  margin-top: 3rem;
+  color: #636e72;
+  font-size: 0.9rem;
+}
+
+/* Add animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.card-body {
+  animation: fadeIn 0.5s ease-in;
+}
+
+/* Responsive tweaks */
+@media (max-width: 576px) {
+  .card {
+    margin: 1rem;
+  }
+
+  #prompt {
+    font-size: 0.9rem;
+  }
+
+  button[type="submit"] {
+    font-size: 1rem;
+  }
+}
