@@ -1,47 +1,155 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Sikhism Info</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
   <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+  
   <!-- Your Custom CSS -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: #f8f9fa;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    nav.navbar {
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    .welcome-msg {
+      margin: 30px auto 10px;
+      text-align: center;
+      font-weight: 600;
+      color: #0d6efd;
+    }
+
+    .auth-links {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .auth-links a {
+      margin: 0 10px;
+      font-weight: 500;
+      color: #0d6efd;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .auth-links a:hover {
+      color: #0a58ca;
+      text-decoration: underline;
+    }
+
+    .card {
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(13, 110, 253, 0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(13, 110, 253, 0.2);
+    }
+
+    h3.card-title {
+      font-weight: 700;
+      color: #0d6efd;
+    }
+
+    textarea#prompt {
+      resize: vertical;
+      min-height: 120px;
+      font-size: 1.1rem;
+      padding: 15px;
+      border-radius: 8px;
+      border: 1.5px solid #ced4da;
+      transition: border-color 0.3s;
+    }
+
+    textarea#prompt:focus {
+      border-color: #0d6efd;
+      box-shadow: 0 0 5px rgba(13, 110, 253, 0.5);
+      outline: none;
+    }
+
+    #response {
+      min-height: 100px;
+      font-family: 'Courier New', Courier, monospace;
+      color: #212529;
+      background-color: #e9ecef;
+      border-radius: 8px;
+      white-space: pre-wrap;
+      padding: 20px;
+      font-size: 1rem;
+      line-height: 1.5;
+      overflow-wrap: break-word;
+    }
+
+    button.btn-primary {
+      font-size: 1.1rem;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+  </style>
 </head>
-<body class="bg-light">
+<body>
   <!-- Navigation Bar -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">Sikhism Chatbot</a>
+      <a class="navbar-brand fw-bold" href="#">Sikhism Chatbot</a>
     </div>
   </nav>
 
+  {% if user.is_authenticated %}
+    <h1 class="welcome-msg">Welcome, {{ user.username }}!</h1>
+    <div class="auth-links">
+      <a href="{{ url_for('logout') }}" class="btn btn-outline-primary btn-sm">Logout</a>
+    </div>
+  {% else %}
+    <h1 class="welcome-msg">Welcome to the Sikhism Info Site!</h1>
+    <div class="auth-links">
+      <a href="{{ url_for('login') }}">Login</a> or 
+      <a href="{{ url_for('register') }}">Register</a>
+    </div>
+  {% endif %}
+  
   <!-- Main Content -->
-  <div class="container mt-5">
+  <div class="container">
     <div class="row justify-content-center">
-      <div class="col-md-8">
-        <div class="card shadow-sm">
-          <div class="card-body">
-            <h3 class="card-title text-center mb-4">Ask a Question About Sikhism</h3>
-            <form id="ask-form">
-              <div class="mb-3">
-                <textarea id="prompt" class="form-control" rows="4" placeholder="Ask your question here..."></textarea>
-              </div>
-              <div class="d-grid">
-                <button type="submit" class="btn btn-primary">Ask</button>
-              </div>
-            </form>
-            <hr>
-            <pre id="response" class="bg-light p-3 mt-3 border rounded" style="white-space: pre-wrap;"></pre>
-          </div>
+      <div class="col-md-7 col-lg-6">
+        <div class="card shadow-sm p-4">
+          <h3 class="card-title text-center mb-4">Ask a Question About Sikhism</h3>
+          <form id="ask-form" autocomplete="off">
+            <div class="mb-3">
+              <textarea id="prompt" class="form-control" placeholder="Ask your question here..."></textarea>
+            </div>
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary">Ask</button>
+            </div>
+          </form>
+          <hr class="my-4" />
+          <pre id="response" aria-live="polite"></pre>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Bootstrap JS (optional, needed for dropdowns etc.) -->
+  <!-- Bootstrap JS Bundle (includes Popper) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
   <!-- Your JS -->
   <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
