@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>3D Models</title>
+    <style>
+        body { font-family: Arial; }
+        .model-card { margin: 20px; display: inline-block; text-align: center; }
+    </style>
+</head>
+<body>
+    <h1>Available 3D Models</h1>
+
+    {% for model in models %}
+        <div class="model-card">
+            <p>{{ model.uid }}</p>
+            <model-viewer src="{{ model.path }}" alt="3D model" auto-rotate camera-controls style="width: 400px; height: 400px;"></model-viewer>
+        </div>
+    {% endfor %}
+
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+</body>
+</html>

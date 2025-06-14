@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from ai_routes import ai_bp
 from flask_login import UserMixin, LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
+import os
 
 app = Flask(__name__)
 
@@ -39,6 +40,23 @@ class User(db.Model, UserMixin):
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+@app.route("/images")
+def images():
+    models_dir = os.path.join("static", "assets", "3d")
+    model_folders = [folder for folder in os.listdir(models_dir) 
+                     if os.path.isdir(os.path.join(models_dir, folder))]
+    
+    models = []
+    for folder in model_folders:
+        model_path = os.path.join(models_dir, folder, "model.glb")
+        if os.path.exists(model_path):
+            models.append({
+                "uid": folder,
+                "path": f"/{model_path.replace(os.sep, '/')}"
+            })
+
+    return render_template("images.html", models=models)
 
 @app.route("/")
 def index():
