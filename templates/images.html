@@ -1,23 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>3D Models</title>
+    <meta charset="UTF-8" />
+    <title>Babylon.js 3D Model Viewer</title>
     <style>
-        body { font-family: Arial; }
-        .model-card { margin: 20px; display: inline-block; text-align: center; }
+        body { margin: 0; overflow: hidden; font-family: Arial, sans-serif; }
+        #renderCanvas { width: 100vw; height: 80vh; display: block; }
+        #modelSelector {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 10;
+            padding: 8px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 4px;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
-    <h1>Available 3D Models</h1>
+    <select id="modelSelector">
+        {% for model in models %}
+            <option value="{{ model.path }}">{{ model.uid }}</option>
+        {% endfor %}
+    </select>
+    <canvas id="renderCanvas"></canvas>
 
-    {% for model in models %}
-        <div class="model-card">
-            <p>{{ model.uid }}</p>
-            <model-viewer src="{{ model.path }}" alt="3D model" auto-rotate camera-controls style="width: 400px; height: 400px;"></model-viewer>
-        </div>
-    {% endfor %}
+    <!-- Babylon.js CDN -->
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="https://cdn.babylonjs.com/loaders/babylon.glTF2FileLoader.js"></script>
 
-    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <script>
+        const canvas = document.getElementById("renderCanvas");
+        const engine = new BABYLON.Engine(canvas, true);
+
+        let currentScene = null;
+
+        function createScene(modelUrl) {
+            if (currentScene) {
+                currentScene.dispose();
+            }
+
+            const scene = new BABYLON.Scene(engine);
+
+            // Camera
+            const camera = new BABYLON.ArcRotateCamera("Camera", Math.PI / 2, Math.PI / 3, 4, BABYLON.Vector3.Zero(), scene);
+            camera.attachControl(canvas, true);
+
+            // Light
+            const light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(1, 1, 0), scene);
+
+            // Load GLB model
+            BABYLON.SceneLoader.Append("", modelUrl, scene, function () {
+                engine.runRenderLoop(() => scene.render());
+            });
+
+            currentScene = scene;
+        }
+
+        // Initialize with first model
+        const modelSelector = document.getElementById("modelSelector");
+        createScene(modelSelector.value);
+
+        // Change model on dropdown change
+        modelSelector.addEventListener("change", (e) => {
+            createScene(e.target.value);
+        });
+
+        // Resize
+        window.addEventListener("resize", () => {
+            engine.resize();
+        });
+    </script>
 </body>
 </html>

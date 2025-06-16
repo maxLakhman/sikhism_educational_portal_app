@@ -44,18 +44,19 @@ def load_user(user_id):
 @app.route("/images")
 def images():
     models_dir = os.path.join("static", "assets", "3d")
-    model_folders = [folder for folder in os.listdir(models_dir) 
+    model_folders = [folder for folder in os.listdir(models_dir)
                      if os.path.isdir(os.path.join(models_dir, folder))]
-    
+
     models = []
     for folder in model_folders:
-        model_path = os.path.join(models_dir, folder, "model.glb")
+        model_path = os.path.join("static", "assets", "3d", folder, "scene.gltf")
         if os.path.exists(model_path):
             models.append({
                 "uid": folder,
-                "path": f"/{model_path.replace(os.sep, '/')}"
+                "path": "/" + model_path.replace(os.sep, "/")
             })
 
+    print(f"Models to send to template: {models}")
     return render_template("images.html", models=models)
 
 @app.route("/")
