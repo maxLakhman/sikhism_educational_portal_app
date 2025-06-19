@@ -95,8 +95,32 @@
       const light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(1, 1, 0), scene);
 
       BABYLON.SceneLoader.Append("", modelUrl, scene, function () {
+        scene.executeWhenReady(() => {
+        const meshes = scene.meshes.filter(m => m.name !== "__root__" && m.isVisible);
+
+        if (meshes.length === 0) return;
+
+        // Compute bounding box
+        const boundingVectors = meshes.map(mesh => mesh.getBoundingInfo().boundingBox);
+        const min = boundingVectors.reduce((acc, box) => BABYLON.Vector3.Minimize(acc, box.minimumWorld), boundingVectors[0].minimumWorld.clone());
+        const max = boundingVectors.reduce((acc, box) => BABYLON.Vector3.Maximize(acc, box.maximumWorld), boundingVectors[0].maximumWorld.clone());
+
+        const center = min.add(max).scale(0.5);
+        const size = max.subtract(min).length();
+
+        // Setup camera
+        const camera = scene.activeCamera;
+        camera.setTarget(center);
+        camera.radius = size * 1.2;
+        camera.alpha = Math.PI / 4; // angled view
+        camera.beta = Math.PI / 3;  // slight downward tilt
+
         engine.runRenderLoop(() => scene.render());
-      });
+        });
+        });
+      
+
+
 
       currentScene = scene;
     }
