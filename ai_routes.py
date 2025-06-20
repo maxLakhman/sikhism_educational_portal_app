@@ -4,8 +4,14 @@ import os
 from dotenv import load_dotenv
 
 #Gets the OpenAI API key from the environment variables
-load_dotenv()
-openai.api_key = os.getenv("OPENAI_API_KEY")
+load_dotenv(override=True)
+api_key = os.getenv("OPENAI_API_KEY")
+
+print(f"loaded key: {api_key}")
+
+openai.api_key = api_key
+
+print(f"loaded key: {openai.api_key}")
 
 ai_bp = Blueprint('ai', __name__)
 

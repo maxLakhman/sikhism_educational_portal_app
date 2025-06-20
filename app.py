@@ -63,6 +63,10 @@ def images():
 def index():
     return render_template("index.html", user=current_user)
 
+@app.route("/hello")
+def hello():
+    return render_template("hello.html")
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
