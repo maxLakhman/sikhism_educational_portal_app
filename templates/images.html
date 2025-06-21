@@ -27,21 +27,27 @@
       margin-top: 30px;
     }
 
-    #renderCanvas {
+    #renderCanvas, .sketchfab-embed-wrapper iframe {
       width: 100%;
       height: 60vh;
       border-radius: 12px;
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     }
 
-    #modelSelector {
-      font-size: 1rem;
-      padding: 10px;
-      border-radius: 8px;
-    }
-
     .form-select {
       margin-bottom: 20px;
+    }
+
+    .sketchfab-embed-wrapper p {
+      font-size: 13px;
+      font-weight: normal;
+      margin: 5px;
+      color: #4A4A4A;
+    }
+
+    .sketchfab-embed-wrapper a {
+      font-weight: bold;
+      color: #1CAAD9;
     }
   </style>
 </head>
@@ -62,10 +68,53 @@
           <h3 class="card-title text-center mb-3">Select and View a 3D Model</h3>
           <select id="modelSelector" class="form-select">
             {% for model in models %}
-              <option value="{{ model.path }}">{{ model.uid }}</option>
+              <option value="{{ model.path }}" data-type="local" {% if loop.first %}selected{% endif %}>{{ model.uid }}</option>
             {% endfor %}
+            <!-- Sketchfab models -->
+            <option value="sketchfab-4d941fd084074232ab782be7d208770e" data-type="sketchfab">Sikh Warrior (Sketchfab)</option>
+            <option value="sketchfab-48832d09b74b4250b23282436caff6c7" data-type="sketchfab">Sikh Manuscript (Sketchfab)</option>
           </select>
+
+          <!-- Babylon.js Canvas -->
           <canvas id="renderCanvas" class="mt-3"></canvas>
+
+          <!-- Sketchfab Embeds -->
+          <div id="sketchfabWarriorEmbed" class="sketchfab-embed-wrapper mt-3" style="display: none;">
+            <iframe
+              title="Sikh Warrior"
+              frameborder="0"
+              allowfullscreen
+              mozallowfullscreen="true"
+              webkitallowfullscreen="true"
+              allow="autoplay; fullscreen; xr-spatial-tracking"
+              xr-spatial-tracking
+              execution-while-out-of-viewport
+              execution-while-not-rendered
+              web-share
+              src="https://sketchfab.com/models/4d941fd084074232ab782be7d208770e/embed">
+            </iframe>
+          </div>
+
+          <div id="sketchfabManuscriptEmbed" class="sketchfab-embed-wrapper mt-3" style="display: none;">
+            <iframe
+              title="Sikh Manuscript"
+              frameborder="0"
+              allowfullscreen
+              mozallowfullscreen="true"
+              webkitallowfullscreen="true"
+              allow="autoplay; fullscreen; xr-spatial-tracking"
+              xr-spatial-tracking
+              execution-while-out-of-viewport
+              execution-while-not-rendered
+              web-share
+              src="https://sketchfab.com/models/48832d09b74b4250b23282436caff6c7/embed">
+            </iframe>
+            <p>
+              <a href="https://sketchfab.com/3d-models/sikh-manuscript-48832d09b74b4250b23282436caff6c7?utm_medium=embed&utm_campaign=share-popup&utm_content=48832d09b74b4250b23282436caff6c7" target="_blank" rel="nofollow">Sikh Manuscript</a>
+              by <a href="https://sketchfab.com/SikhMuseumInitiative?utm_medium=embed&utm_campaign=share-popup&utm_content=48832d09b74b4250b23282436caff6c7" target="_blank" rel="nofollow">Sikh Museum Initiative</a>
+              on <a href="https://sketchfab.com?utm_medium=embed&utm_campaign=share-popup&utm_content=48832d09b74b4250b23282436caff6c7" target="_blank" rel="nofollow">Sketchfab</a>
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -81,6 +130,9 @@
   <!-- Babylon.js Viewer Script -->
   <script>
     const canvas = document.getElementById("renderCanvas");
+    const sketchfabWarriorEmbed = document.getElementById("sketchfabWarriorEmbed");
+    const sketchfabManuscriptEmbed = document.getElementById("sketchfabManuscriptEmbed");
+    const modelSelector = document.getElementById("modelSelector");
     const engine = new BABYLON.Engine(canvas, true);
     let currentScene = null;
 
@@ -96,47 +148,62 @@
 
       BABYLON.SceneLoader.Append("", modelUrl, scene, function () {
         scene.executeWhenReady(() => {
-        const meshes = scene.meshes.filter(m => m.name !== "__root__" && m.isVisible);
+          const meshes = scene.meshes.filter(m => m.name !== "__root__" && m.isVisible);
+          if (meshes.length === 0) return;
 
-        if (meshes.length === 0) return;
+          const boundingVectors = meshes.map(mesh => mesh.getBoundingInfo().boundingBox);
+          const min = boundingVectors.reduce((acc, box) => BABYLON.Vector3.Minimize(acc, box.minimumWorld), boundingVectors[0].minimumWorld.clone());
+          const max = boundingVectors.reduce((acc, box) => BABYLON.Vector3.Maximize(acc, box.maximumWorld), boundingVectors[0].maximumWorld.clone());
+          const center = min.add(max).scale(0.5);
+          const size = max.subtract(min).length();
 
-        // Compute bounding box
-        const boundingVectors = meshes.map(mesh => mesh.getBoundingInfo().boundingBox);
-        const min = boundingVectors.reduce((acc, box) => BABYLON.Vector3.Minimize(acc, box.minimumWorld), boundingVectors[0].minimumWorld.clone());
-        const max = boundingVectors.reduce((acc, box) => BABYLON.Vector3.Maximize(acc, box.maximumWorld), boundingVectors[0].maximumWorld.clone());
+          camera.setTarget(center);
+          camera.radius = size * 1.2;
+          camera.alpha = Math.PI / 4;
+          camera.beta = Math.PI / 3;
 
-        const center = min.add(max).scale(0.5);
-        const size = max.subtract(min).length();
-
-        // Setup camera
-        const camera = scene.activeCamera;
-        camera.setTarget(center);
-        camera.radius = size * 1.2;
-        camera.alpha = Math.PI / 4; // angled view
-        camera.beta = Math.PI / 3;  // slight downward tilt
-
-        engine.runRenderLoop(() => scene.render());
+          engine.runRenderLoop(() => scene.render());
         });
-        });
-      
-
-
+      });
 
       currentScene = scene;
     }
 
-    const modelSelector = document.getElementById("modelSelector");
-    if (modelSelector && modelSelector.value) {
-      createScene(modelSelector.value);
+    function handleSelection() {
+      const selectedOption = modelSelector.selectedOptions[0];
+      const modelUrl = selectedOption.value;
+      const modelType = selectedOption.dataset.type || "local";
+
+      // Hide all elements first
+      canvas.style.display = "none";
+      sketchfabWarriorEmbed.style.display = "none";
+      sketchfabManuscriptEmbed.style.display = "none";
+
+      if (modelType === "sketchfab") {
+        if (modelUrl.includes("4d941fd084074232ab782be7d208770e")) {
+          sketchfabWarriorEmbed.style.display = "block";
+        } else if (modelUrl.includes("48832d09b74b4250b23282436caff6c7")) {
+          sketchfabManuscriptEmbed.style.display = "block";
+        }
+        
+        if (currentScene) {
+          currentScene.dispose();
+          currentScene = null;
+        }
+      } else {
+        canvas.style.display = "block";
+        createScene(modelUrl);
+      }
     }
 
-    modelSelector.addEventListener("change", (e) => {
-      createScene(e.target.value);
+    window.addEventListener("DOMContentLoaded", () => {
+      if (modelSelector && modelSelector.options.length > 0) {
+        handleSelection();
+      }
     });
 
-    window.addEventListener("resize", () => {
-      engine.resize();
-    });
+    modelSelector.addEventListener("change", handleSelection);
+    window.addEventListener("resize", () => engine.resize());
   </script>
 </body>
 </html>

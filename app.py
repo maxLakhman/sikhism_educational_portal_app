@@ -56,7 +56,7 @@ def images():
                 "path": "/" + model_path.replace(os.sep, "/")
             })
 
-    print(f"Models to send to template: {models}")
+    #print(f"Models to send to template: {models}")
     return render_template("images.html", models=models)
 
 @app.route("/")
