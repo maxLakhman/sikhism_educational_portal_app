@@ -7,11 +7,11 @@ from dotenv import load_dotenv
 load_dotenv(override=True)
 api_key = os.getenv("OPENAI_API_KEY")
 
-print(f"loaded key: {api_key}")
+#print(f"loaded key: {api_key}")
 
 openai.api_key = api_key
 
-print(f"loaded key: {openai.api_key}")
+#print(f"loaded key: {openai.api_key}")
 
 ai_bp = Blueprint('ai', __name__)
 

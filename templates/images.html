@@ -27,7 +27,7 @@
       margin-top: 30px;
     }
 
-    #renderCanvas, .sketchfab-embed-wrapper iframe {
+    #renderCanvas, .sketchfab-embed iframe {
       width: 100%;
       height: 60vh;
       border-radius: 12px;
@@ -38,16 +38,20 @@
       margin-bottom: 20px;
     }
 
-    .sketchfab-embed-wrapper p {
+    .sketchfab-attribution {
       font-size: 13px;
       font-weight: normal;
       margin: 5px;
       color: #4A4A4A;
     }
 
-    .sketchfab-embed-wrapper a {
+    .sketchfab-attribution a {
       font-weight: bold;
       color: #1CAAD9;
+    }
+
+    .model-container {
+      display: none;
     }
   </style>
 </head>
@@ -66,55 +70,80 @@
       <div class="col-md-8">
         <div class="card p-4 shadow-sm">
           <h3 class="card-title text-center mb-3">Select and View a 3D Model</h3>
+          
+          <!-- Model Selection Dropdown -->
           <select id="modelSelector" class="form-select">
             {% for model in models %}
-              <option value="{{ model.path }}" data-type="local" {% if loop.first %}selected{% endif %}>{{ model.uid }}</option>
+              <option value="{{ model.path }}" data-type="local">{{ model.uid }}</option>
             {% endfor %}
-            <!-- Sketchfab models -->
-            <option value="sketchfab-4d941fd084074232ab782be7d208770e" data-type="sketchfab">Sikh Warrior (Sketchfab)</option>
-            <option value="sketchfab-48832d09b74b4250b23282436caff6c7" data-type="sketchfab">Sikh Manuscript (Sketchfab)</option>
+            
+            <!-- Sketchfab Models - Add new ones here -->
+            <option value="warrior" data-type="sketchfab">Sikh Warrior</option>
+            <option value="manuscript" data-type="sketchfab">Sikh Manuscript</option>
+            <option value="helmet" data-type="sketchfab">Sikh Helmet</option>
+            <!-- Add new Sketchfab models like this:
+
+            <option value="your-model-id" data-type="sketchfab">Your Model Name</option>
+            
+            -->
           </select>
 
           <!-- Babylon.js Canvas -->
-          <canvas id="renderCanvas" class="mt-3"></canvas>
+          <canvas id="renderCanvas" class="model-container"></canvas>
 
-          <!-- Sketchfab Embeds -->
-          <div id="sketchfabWarriorEmbed" class="sketchfab-embed-wrapper mt-3" style="display: none;">
-            <iframe
-              title="Sikh Warrior"
-              frameborder="0"
-              allowfullscreen
-              mozallowfullscreen="true"
-              webkitallowfullscreen="true"
-              allow="autoplay; fullscreen; xr-spatial-tracking"
-              xr-spatial-tracking
-              execution-while-out-of-viewport
-              execution-while-not-rendered
-              web-share
-              src="https://sketchfab.com/models/4d941fd084074232ab782be7d208770e/embed">
+          <!-- Sketchfab Model Templates -->
+          <div id="sketchfab-warrior" class="model-container sketchfab-embed">
+            <iframe title="Sikh Warrior" 
+                    src="https://sketchfab.com/models/4d941fd084074232ab782be7d208770e/embed"
+                    frameborder="0" allowfullscreen allow="autoplay; fullscreen; xr-spatial-tracking">
             </iframe>
           </div>
 
-          <div id="sketchfabManuscriptEmbed" class="sketchfab-embed-wrapper mt-3" style="display: none;">
-            <iframe
-              title="Sikh Manuscript"
-              frameborder="0"
-              allowfullscreen
-              mozallowfullscreen="true"
-              webkitallowfullscreen="true"
-              allow="autoplay; fullscreen; xr-spatial-tracking"
-              xr-spatial-tracking
-              execution-while-out-of-viewport
-              execution-while-not-rendered
-              web-share
-              src="https://sketchfab.com/models/48832d09b74b4250b23282436caff6c7/embed">
+          <div id="sketchfab-manuscript" class="model-container sketchfab-embed">
+            <iframe title="Sikh Manuscript"
+                    src="https://sketchfab.com/models/48832d09b74b4250b23282436caff6c7/embed"
+                    frameborder="0" allowfullscreen allow="autoplay; fullscreen; xr-spatial-tracking">
             </iframe>
-            <p>
-              <a href="https://sketchfab.com/3d-models/sikh-manuscript-48832d09b74b4250b23282436caff6c7?utm_medium=embed&utm_campaign=share-popup&utm_content=48832d09b74b4250b23282436caff6c7" target="_blank" rel="nofollow">Sikh Manuscript</a>
-              by <a href="https://sketchfab.com/SikhMuseumInitiative?utm_medium=embed&utm_campaign=share-popup&utm_content=48832d09b74b4250b23282436caff6c7" target="_blank" rel="nofollow">Sikh Museum Initiative</a>
-              on <a href="https://sketchfab.com?utm_medium=embed&utm_campaign=share-popup&utm_content=48832d09b74b4250b23282436caff6c7" target="_blank" rel="nofollow">Sketchfab</a>
+            <p class="sketchfab-attribution">
+              <a href="https://sketchfab.com/3d-models/sikh-manuscript-48832d09b74b4250b23282436caff6c7" target="_blank">Sikh Manuscript</a>
+              by <a href="https://sketchfab.com/SikhMuseumInitiative" target="_blank">Sikh Museum Initiative</a>
+              on <a href="https://sketchfab.com" target="_blank">Sketchfab</a>
             </p>
           </div>
+
+          <div id="sketchfab-da2d641a4eb64a879f3b4ba8f4e6f68f" class="model-container sketchfab-embed">
+            <iframe title="Sikh Helmet"
+                    src="https://sketchfab.com/models/da2d641a4eb64a879f3b4ba8f4e6f68f/embed"
+                    frameborder="0" allowfullscreen
+                    allow="autoplay; fullscreen; xr-spatial-tracking"
+                    mozallowfullscreen="true" webkitallowfullscreen="true"
+                    xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share>
+            </iframe>
+            <p class="sketchfab-attribution">
+              <a href="https://sketchfab.com/3d-models/sikh-helmet-da2d641a4eb64a879f3b4ba8f4e6f68f?utm_medium=embed&utm_campaign=share-popup&utm_content=da2d641a4eb64a879f3b4ba8f4e6f68f"
+                target="_blank">Sikh Helmet</a>
+              by <a href="https://sketchfab.com/SikhMuseumInitiative?utm_medium=embed&utm_campaign=share-popup&utm_content=da2d641a4eb64a879f3b4ba8f4e6f68f"
+                target="_blank">Sikh Museum Initiative</a>
+              on <a href="https://sketchfab.com?utm_medium=embed&utm_campaign=share-popup&utm_content=da2d641a4eb64a879f3b4ba8f4e6f68f"
+                target="_blank">Sketchfab</a>
+            </p>
+          </div>
+
+
+          <!-- Template for new Sketchfab models (copy and modify this) -->
+          <!--
+          <div id="sketchfab-your-model-id" class="model-container sketchfab-embed">
+            <iframe title="Your Model Name"
+                    src="https://sketchfab.com/models/YOUR-MODEL-ID/embed"
+                    frameborder="0" allowfullscreen allow="autoplay; fullscreen; xr-spatial-tracking">
+            </iframe>
+            <p class="sketchfab-attribution">
+              <a href="https://sketchfab.com/3d-models/your-model-url" target="_blank">Model Name</a>
+              by <a href="https://sketchfab.com/artist" target="_blank">Artist Name</a>
+              on <a href="https://sketchfab.com" target="_blank">Sketchfab</a>
+            </p>
+          </div>
+          -->
         </div>
       </div>
     </div>
@@ -127,41 +156,52 @@
   <!-- Bootstrap JS Bundle -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-  <!-- Babylon.js Viewer Script -->
   <script>
     const canvas = document.getElementById("renderCanvas");
-    const sketchfabWarriorEmbed = document.getElementById("sketchfabWarriorEmbed");
-    const sketchfabManuscriptEmbed = document.getElementById("sketchfabManuscriptEmbed");
     const modelSelector = document.getElementById("modelSelector");
     const engine = new BABYLON.Engine(canvas, true);
     let currentScene = null;
 
-    function createScene(modelUrl) {
-      if (currentScene) {
-        currentScene.dispose();
+    // Model configuration
+    const sketchfabModels = {
+      'warrior': {
+        containerId: 'sketchfab-warrior'
+      },
+      'manuscript': {
+        containerId: 'sketchfab-manuscript'
+      },
+      'helmet': {
+        containerId: 'sketchfab-da2d641a4eb64a879f3b4ba8f4e6f68f'
       }
+      // Add new models like this:
+      // 'your-model-id': {
+      //   containerId: 'sketchfab-your-model-id'
+      // }
+    };
+
+    function createScene(modelUrl) {
+      if (currentScene) currentScene.dispose();
 
       const scene = new BABYLON.Scene(engine);
       const camera = new BABYLON.ArcRotateCamera("Camera", Math.PI / 2, Math.PI / 3, 4, BABYLON.Vector3.Zero(), scene);
       camera.attachControl(canvas, true);
-      const light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(1, 1, 0), scene);
+      new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(1, 1, 0), scene);
 
-      BABYLON.SceneLoader.Append("", modelUrl, scene, function () {
+      BABYLON.SceneLoader.Append("", modelUrl, scene, function() {
         scene.executeWhenReady(() => {
           const meshes = scene.meshes.filter(m => m.name !== "__root__" && m.isVisible);
-          if (meshes.length === 0) return;
+          if (meshes.length > 0) {
+            const boundingVectors = meshes.map(mesh => mesh.getBoundingInfo().boundingBox);
+            const min = boundingVectors.reduce((acc, box) => BABYLON.Vector3.Minimize(acc, box.minimumWorld), boundingVectors[0].minimumWorld.clone());
+            const max = boundingVectors.reduce((acc, box) => BABYLON.Vector3.Maximize(acc, box.maximumWorld), boundingVectors[0].maximumWorld.clone());
+            const center = min.add(max).scale(0.5);
+            const size = max.subtract(min).length();
 
-          const boundingVectors = meshes.map(mesh => mesh.getBoundingInfo().boundingBox);
-          const min = boundingVectors.reduce((acc, box) => BABYLON.Vector3.Minimize(acc, box.minimumWorld), boundingVectors[0].minimumWorld.clone());
-          const max = boundingVectors.reduce((acc, box) => BABYLON.Vector3.Maximize(acc, box.maximumWorld), boundingVectors[0].maximumWorld.clone());
-          const center = min.add(max).scale(0.5);
-          const size = max.subtract(min).length();
-
-          camera.setTarget(center);
-          camera.radius = size * 1.2;
-          camera.alpha = Math.PI / 4;
-          camera.beta = Math.PI / 3;
-
+            camera.setTarget(center);
+            camera.radius = size * 1.2;
+            camera.alpha = Math.PI / 4;
+            camera.beta = Math.PI / 3;
+          }
           engine.runRenderLoop(() => scene.render());
         });
       });
@@ -171,31 +211,34 @@
 
     function handleSelection() {
       const selectedOption = modelSelector.selectedOptions[0];
-      const modelUrl = selectedOption.value;
-      const modelType = selectedOption.dataset.type || "local";
+      const modelValue = selectedOption.value;
+      const modelType = selectedOption.dataset.type;
 
-      // Hide all elements first
-      canvas.style.display = "none";
-      sketchfabWarriorEmbed.style.display = "none";
-      sketchfabManuscriptEmbed.style.display = "none";
+      // Hide all containers first
+      document.querySelectorAll('.model-container').forEach(el => {
+        el.style.display = 'none';
+      });
 
-      if (modelType === "sketchfab") {
-        if (modelUrl.includes("4d941fd084074232ab782be7d208770e")) {
-          sketchfabWarriorEmbed.style.display = "block";
-        } else if (modelUrl.includes("48832d09b74b4250b23282436caff6c7")) {
-          sketchfabManuscriptEmbed.style.display = "block";
+      if (modelType === 'sketchfab') {
+        // Show the selected Sketchfab model
+        const modelConfig = sketchfabModels[modelValue];
+        if (modelConfig) {
+          document.getElementById(modelConfig.containerId).style.display = 'block';
         }
         
+        // Clean up Babylon.js if needed
         if (currentScene) {
           currentScene.dispose();
           currentScene = null;
         }
       } else {
-        canvas.style.display = "block";
-        createScene(modelUrl);
+        // Show Babylon.js canvas for local models
+        canvas.style.display = 'block';
+        createScene(modelValue);
       }
     }
 
+    // Initialize
     window.addEventListener("DOMContentLoaded", () => {
       if (modelSelector && modelSelector.options.length > 0) {
         handleSelection();

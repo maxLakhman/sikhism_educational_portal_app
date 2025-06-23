@@ -8,7 +8,7 @@ import shutil
 # CONFIGURATION
 API_TOKEN = "f0c963db748742feb6fde1f20db8b517"  # replace with your actual token
 DOWNLOAD_DIR = "static/assets/3d/"
-QUERY = "sikh warrior"  # replace with your search query
+QUERY = "sikh"  # replace with your search query
 MAX_MODELS = 5
 
 # Ensure download directory exists
