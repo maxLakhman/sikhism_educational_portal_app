@@ -107,11 +107,34 @@
 </head>
 <body>
   <!-- Navigation Bar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <div class="container-fluid">
-      <a class="navbar-brand fw-bold" href="#">Sikhism Chatbot</a>
-    </div>
-  </nav>
+  <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="#">Sikhism Chatbot</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarDropdown" aria-controls="navbarDropdown" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarDropdown">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="infoDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Learn More
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="infoDropdown">
+                <li><a class="dropdown-item" href="#">History of Sikhism</a></li>
+                <li><a class="dropdown-item" href="#">Guru Teachings</a></li>
+                <li><a class="dropdown-item" href="#">Sikh Practices</a></li>
+                <li><button id="goToImages" class="dropdown-item">Image Generator</button></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="#">Contact Us</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
 
   {% if user.is_authenticated %}
     <h1 class="welcome-msg">Welcome, {{ user.username }}!</h1>
@@ -152,6 +175,11 @@
   
   <!-- Your JS -->
   <script src="{{ url_for('static', filename='script.js') }}"></script>
+  <script>
+  document.getElementById('goToImages').addEventListener('click', function() {
+    window.location.href = "{{ url_for('images') }}";
+  });
+</script>
 </body>
 </html>
 

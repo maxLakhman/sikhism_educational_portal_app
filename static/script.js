@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const promptInput = document.getElementById("prompt");
   const responseDisplay = document.getElementById("response");
 
+
   form.addEventListener("submit", async function (e) {
     e.preventDefault();
     const prompt = promptInput.value.trim();
